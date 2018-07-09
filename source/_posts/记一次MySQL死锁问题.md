@@ -293,7 +293,41 @@ No query specified
 
 ```
 3. 定位到LATEST DETECTED DEADLOCK 我们发现有存在事务锁，同一时间存在排他锁跟共享锁
-4. 修改程序代码
+4. 原先代码如下:
+```java
+ //设置batch
+String batch = RandomUtil.generateNumber6();
+ecps.forEach(ecp -> ecp.setBatch(batch));
+//新增
+int count = accountYxtEcpMapper.insertBatch(ecps);
+if (count == 0) {
+    log.info("重复添加,ecps={}", JSON.toJSONString(ecps));
+    return;
+}
+List<AccountYxtEcp> needToAdd = ecps;
+AccountYxtEcp ecp = ecps.get(0);
+//存在重复情况
+if (count != ecps.size()) {
+    needToAdd = accountYxtEcpMapper.ecpsByBatch(
+            ecp.getBid(),
+            ecp.getDay(),
+            ecp.getBatch(),
+            ecps.stream().map(AccountYxtEcp::getUid).collect(toList()));
+}
+if (CollectionUtils.isEmpty(needToAdd)) {
+    log.info("重复添加,ecps={}", JSON.toJSONString(ecps));
+    return;
+}
+
+if (needToAdd.size() != ecps.size()) {
+    log.info("存在部分重复不重复部分,ecps={}", JSON.toJSONString(ecps));
+}
+
+for (AccountYxtEcp yxtEcp : needToAdd) {
+    this.addTradeDetail(yxtEcp);
+}
+```
+5. 修改程序代码
 ```java
 List<AccountYxtEcp> needAddAccountYxtEcp = null;
 //设置batch
