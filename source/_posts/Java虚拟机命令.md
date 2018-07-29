@@ -148,5 +148,4 @@ Options:
     -m  to print both java and native frames (mixed mode)
     -l  long listing. Prints additional information about locks
     -h or -help to print this help message
-
 ```
