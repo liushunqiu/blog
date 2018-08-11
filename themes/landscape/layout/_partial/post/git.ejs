@@ -4,6 +4,7 @@
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
 var gitment = new Gitment({
+  id: decodeURI(window.location.pathname),
   owner: "liushunqiu",//github用户名
   repo: "liushunqiu.github.io",//用户存储评论的github项目名称
   oauth: {
