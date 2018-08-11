@@ -42,3 +42,10 @@
   </div>
 </section>
 <% } %>
+<% if (!index){ %>
+  <% if (post.comments){ %>
+  <%- partial('post/git') %>
+  <% } else { %>
+    <div class="git"></div>
+  <% } %>
+<% } %>
